@@ -68,6 +68,7 @@ const postHandler = (argv) => {
 
 // create commands
 const argv = yargs(hideBin(process.argv))
+  .usage('<METHOD> [options] url wrapped in quotes if it contains queries')
   .command(
     ['GET', 'G'],
     'Make GET request',
@@ -85,6 +86,7 @@ const argv = yargs(hideBin(process.argv))
     {
       body: {
         alias: 'b',
+        describe: 'Stringified JSON object containing request body',
       },
     },
     postHandler
