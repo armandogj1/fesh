@@ -5,6 +5,7 @@
   "bin": {
     "fesh": "./bin/index.js"
   },
+  "preferGlobal": true,
   "description": "fetch interface for the terminal",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
