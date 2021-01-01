@@ -1,0 +1,18 @@
+{
+  "name": "fesh",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "bin": {
+    "fesh": "./bin/index.js"
+  },
+  "description": "fetch interface for the terminal",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "J. Armando Garcia-Jacquier",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "yargs": "^16.2.0"
+  }
+}
