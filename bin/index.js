@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const axios = require('axios');
+const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
@@ -16,17 +17,21 @@ const getHandler = (argv) => {
   axios
     .get(url, query)
     .then((res) => {
-      console.group('This response to GET request');
+      console.group(chalk.underline.bgGreen('This response to GET request'));
       console.log(res.status, res.statusText);
-      console.table(res.headers);
-      console.table(res.data);
+      if (argv.verbose) {
+        console.table(res.headers);
+      }
+      console.dir(res.data);
       console.groupEnd();
     })
     .catch((err) => {
-      console.group('This Error to GET request');
+      console.group(chalk.underline.bgRed('This Error to GET request'));
       if (err.response) {
         console.log(err.response.status, err.response.statusText);
-        console.table(err.response.headers);
+        if (argv.verbose) {
+          console.table(err.response.headers);
+        }
       } else if (err.request) {
         console.log(err.request);
       } else {
@@ -39,7 +44,6 @@ const getHandler = (argv) => {
 const postHandler = (argv) => {
   const url = argv._.slice(-1)[0];
 
-  console.table(argv);
   const body = argv.body ? JSON.parse(argv.body) : {};
 
   axios
@@ -47,15 +51,19 @@ const postHandler = (argv) => {
     .then((res) => {
       console.group('This response to POST request');
       console.log(res.status, res.statusText);
-      console.table(res.headers);
-      console.table(res.data);
+      if (argv.verbose) {
+        console.table(res.headers);
+      }
+      console.dir(res.data);
       console.groupEnd();
     })
     .catch((err) => {
       console.group('This Error to POST request');
       if (err.response) {
         console.log(err.response.status, err.response.statusText);
-        console.table(err.response.headers);
+        if (argv.verbose) {
+          console.table(err.response.headers);
+        }
         console.log(err.response.data);
       } else if (err.request) {
         console.log(err.request);
@@ -77,6 +85,12 @@ const argv = yargs(hideBin(process.argv))
         alias: 'q',
         describe: 'Query Parameters',
       },
+      verbose: {
+        alias: 'v',
+        describe: 'Show Headers',
+        type: 'boolean',
+        default: false,
+      },
     },
     getHandler
   )
@@ -87,6 +101,12 @@ const argv = yargs(hideBin(process.argv))
       body: {
         alias: 'b',
         describe: 'Stringified JSON object containing request body',
+      },
+      verbose: {
+        alias: 'v',
+        describe: 'Show Headers',
+        type: 'boolean',
+        default: false,
       },
     },
     postHandler
