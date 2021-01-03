@@ -38,6 +38,10 @@ const argv = yargs(hideBin(process.argv))
     ['POST', 'P'],
     'Make POST request',
     {
+      query: {
+        alias: 'q',
+        describe: 'Query Parameters',
+      },
       body: {
         alias: 'b',
         describe: 'Stringified JSON object containing request body',
@@ -59,6 +63,10 @@ const argv = yargs(hideBin(process.argv))
     ['PUT', 'U'],
     'Make PUT request',
     {
+      query: {
+        alias: 'q',
+        describe: 'Query Parameters',
+      },
       body: {
         alias: 'b',
         describe: 'Stringified JSON object containing request body',
