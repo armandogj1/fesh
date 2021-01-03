@@ -5,74 +5,10 @@ const chalk = require('chalk');
 const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 
-const getHandler = (argv) => {
-  const url = argv._.slice(-1)[0];
-
-  const query = argv.query
-    ? {
-        params: JSON.parse(argv.query),
-      }
-    : {};
-
-  axios
-    .get(url, query)
-    .then((res) => {
-      console.group(chalk.underline.bgGreen('This response to GET request'));
-      console.log(res.status, res.statusText);
-      if (argv.verbose) {
-        console.table(res.headers);
-      }
-      console.dir(res.data);
-      console.groupEnd();
-    })
-    .catch((err) => {
-      console.group(chalk.underline.bgRed('This Error to GET request'));
-      if (err.response) {
-        console.log(err.response.status, err.response.statusText);
-        if (argv.verbose) {
-          console.table(err.response.headers);
-        }
-      } else if (err.request) {
-        console.log(err.request);
-      } else {
-        console.log('Error', err.message);
-      }
-      console.groupEnd();
-    });
-};
-
-const postHandler = (argv) => {
-  const url = argv._.slice(-1)[0];
-
-  const body = argv.body ? JSON.parse(argv.body) : {};
-
-  axios
-    .post(url, body)
-    .then((res) => {
-      console.group('This response to POST request');
-      console.log(res.status, res.statusText);
-      if (argv.verbose) {
-        console.table(res.headers);
-      }
-      console.dir(res.data);
-      console.groupEnd();
-    })
-    .catch((err) => {
-      console.group('This Error to POST request');
-      if (err.response) {
-        console.log(err.response.status, err.response.statusText);
-        if (argv.verbose) {
-          console.table(err.response.headers);
-        }
-        console.log(err.response.data);
-      } else if (err.request) {
-        console.log(err.request);
-      } else {
-        console.log('Error', err.message);
-      }
-      console.groupEnd();
-    });
-};
+// import Handlers
+const getHandler = require('../lib/handlers/getHandler.js');
+const postHandler = require('../lib/handlers/postHandler.js');
+const putHandler = require('../lib/handlers/putHandler.js');
 
 // create commands
 const argv = yargs(hideBin(process.argv))
@@ -84,6 +20,10 @@ const argv = yargs(hideBin(process.argv))
       query: {
         alias: 'q',
         describe: 'Query Parameters',
+      },
+      headers: {
+        alias: 'h',
+        describe: 'Set Request Headers',
       },
       verbose: {
         alias: 'v',
@@ -102,6 +42,10 @@ const argv = yargs(hideBin(process.argv))
         alias: 'b',
         describe: 'Stringified JSON object containing request body',
       },
+      headers: {
+        alias: 'h',
+        describe: 'Set Request Headers',
+      },
       verbose: {
         alias: 'v',
         describe: 'Show Headers',
@@ -110,6 +54,27 @@ const argv = yargs(hideBin(process.argv))
       },
     },
     postHandler
+  )
+  .command(
+    ['PUT', 'U'],
+    'Make PUT request',
+    {
+      body: {
+        alias: 'b',
+        describe: 'Stringified JSON object containing request body',
+      },
+      headers: {
+        alias: 'h',
+        describe: 'Set Request Headers',
+      },
+      verbose: {
+        alias: 'v',
+        describe: 'Show Headers',
+        type: 'boolean',
+        default: false,
+      },
+    },
+    putHandler
   )
   .help().argv;
 
